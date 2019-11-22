@@ -1,5 +1,4 @@
 # Redis Watcher
-====
 
 [![Build status](https://ci.appveyor.com/api/projects/status/wqq4to1ihyabhdmm?svg=true)](https://ci.appveyor.com/project/Sbou/casbin-net-redis-watcher)
 [![Nuget](https://img.shields.io/nuget/v/Casbin.NET.Watcher.Redis.svg)](https://www.nuget.org/packages/Casbin.NET.Watcher.Redis/)

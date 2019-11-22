@@ -4,10 +4,5 @@ configuration: Release
 skip_non_tags: true
 pull_requests:
   do_not_increment_build_number: true
-dotnet_csproj:
-  patch: true
-  file: '**\*.csproj'
-  version: '{version}'
-  package_version: '{version}'
 build_script:
-  - dotnet build -c Release
+  - cmd: dotnet build -c Release
