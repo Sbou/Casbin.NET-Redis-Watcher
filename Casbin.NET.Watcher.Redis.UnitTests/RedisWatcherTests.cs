@@ -8,45 +8,14 @@ using StackExchange.Redis;
 namespace Casbin.NET.Watcher.Redis.UnitTests
 {
     [TestClass]
-    public class RedisWatcherTests
+    public class RedisWatcherTests : RedisTestBase
     {
-        private Action<RedisChannel, RedisValue> redisCallback;
-
-        public IConnectionMultiplexer RedisConnection { get; private set; }
-
-        private IConnectionMultiplexer GetMockedConnection()
-        {
-            var mock = new Mock<IConnectionMultiplexer>(MockBehavior.Default);
-            var subMock = new Mock<ISubscriber>(MockBehavior.Default);
-
-            // The first time it returns a subscriber and the second one a publish
-            // It's to be able to use the callback set in the subscriber in the publisher
-            mock.SetupSequence(connection => connection.GetSubscriber(It.IsAny<object>()))
-                .Returns(() =>
-                {
-                    var subMock = new Mock<ISubscriber>(MockBehavior.Default);
-                    subMock.Setup(sub => sub.Subscribe(It.IsAny<RedisChannel>(), It.IsAny<Action<RedisChannel, RedisValue>>(), It.IsAny<CommandFlags>()))
-                            .Callback((RedisChannel channelName, Action<RedisChannel, RedisValue> callback, CommandFlags flags) => redisCallback = callback);
-                    return subMock.Object;
-                })
-                .Returns(() =>
-                {
-                    var subMock = new Mock<ISubscriber>(MockBehavior.Default);
-                    subMock.Setup(sub => sub.PublishAsync(It.IsAny<RedisChannel>(), It.IsAny<RedisValue>(), It.IsAny<CommandFlags>()))
-                            .Callback((RedisChannel channelName, RedisValue message, CommandFlags flags) => redisCallback?.Invoke(channelName, message));
-                    return subMock.Object;
-                });
-
-            return mock.Object;
-        }
-
-        [TestInitialize]
-        public void Initialize()
+        public IConnectionMultiplexer GetConnection(SubscriptionType subscriptionType)
         {
 #if TRUEREDIS
-            RedisConnection = ConnectionMultiplexer.Connect("localhost:6379");
+            return ConnectionMultiplexer.Connect("localhost:6379");
 #else
-            RedisConnection = GetMockedConnection();
+            return GetMockedConnection(subscriptionType);
 #endif
         }
 
@@ -63,10 +32,10 @@ namespace Casbin.NET.Watcher.Redis.UnitTests
         {
             var callback = new TaskCompletionSource<int>();
             
-            var watcher = new RedisWatcher(RedisConnection);
+            var watcher = new RedisWatcher(GetConnection(SubscriptionType.Subscriber));
             watcher.SetUpdateCallback(() => callback.TrySetResult(1));
 
-            var watcher2 = new RedisWatcher(RedisConnection);
+            var watcher2 = new RedisWatcher(GetConnection(SubscriptionType.Publisher));
             watcher2.Update();
 
             Assert.IsTrue(callback.Task.Wait(300), "The first watcher didn't receive the notification");
@@ -77,7 +46,7 @@ namespace Casbin.NET.Watcher.Redis.UnitTests
         {
             var callback = new TaskCompletionSource<int>();
 
-            var watcher = new RedisWatcher(RedisConnection);
+            var watcher = new RedisWatcher(GetConnection(SubscriptionType.Both));
             watcher.SetUpdateCallback(() => callback.TrySetResult(1));
 
             watcher.Update();

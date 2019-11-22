@@ -27,7 +27,7 @@ namespace Redis.Casbin.NET
         {
             var configuration = ConfigurationOptions.Parse(connectionString);
 
-            // initial a connection
+            // initiate a connection
             connection = ConnectionMultiplexer.Connect(configuration);
 
             Subscribe();
