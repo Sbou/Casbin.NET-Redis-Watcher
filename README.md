@@ -2,7 +2,7 @@
 
 [![Build status](https://ci.appveyor.com/api/projects/status/wqq4to1ihyabhdmm?svg=true)](https://ci.appveyor.com/project/Sbou/casbin-net-redis-watcher)
 [![Nuget](https://img.shields.io/nuget/v/Casbin.NET.Watcher.Redis.svg)](https://www.nuget.org/packages/Casbin.NET.Watcher.Redis/)
-[![Release](https://img.shields.io/github/release/casbin/Casbin.NET.Watcher.Redis.svg)](https://github.com/casbin/Casbin.NET/releases/latest)
+[![Release](https://img.shields.io/github/release/Sbou/Casbin.NET-Redis-Watcher.svg)](https://github.com/Sbou/Casbin.NET-Redis-Watcher/releases/latest)
 [![Nuget](https://img.shields.io/nuget/dt/Casbin.NET.Watcher.Redis.svg)](https://www.nuget.org/packages/Casbin.NET.Watcher.Redis/)
 
 Redis Watcher is a [Redis](http://redis.io) watcher for [Casbin.NET](https://github.com/casbin/Casbin.NET).
