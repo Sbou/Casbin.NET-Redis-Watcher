@@ -1,7 +1,7 @@
 Redis Watcher
 ====
 
-Redis Watcher is a [Redis](http://redis.io) watcher for [Casbin](https://github.com/casbin/casbin).
+Redis Watcher is a [Redis](http://redis.io) watcher for [Casbin.NET](https://github.com/casbin/Casbin.NET).
 
 ## Installation
 
@@ -36,4 +36,4 @@ public class Program
 
 ## Getting Help
 
-- [Casbin](https://github.com/casbin/casbin)
+- [Casbin.NET](https://github.com/casbin/Casbin.NET)
