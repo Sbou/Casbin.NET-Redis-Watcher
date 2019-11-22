@@ -4,14 +4,7 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Configurations>Debug;Release;TrueRedis</Configurations>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DocumentationFile>C:\Repos\Sbou\Redis.Casbin.NET\Casbin.NET.Watcher.Redis\Casbin.NET.Watcher.Redis.xml</DocumentationFile>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='TrueRedis|AnyCPU'">
-    <DocumentationFile>C:\Repos\Sbou\Redis.Casbin.NET\Casbin.NET.Watcher.Redis\Casbin.NET.Watcher.Redis.xml</DocumentationFile>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>
