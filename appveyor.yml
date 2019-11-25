@@ -4,5 +4,36 @@ configuration: Release
 skip_non_tags: true
 pull_requests:
   do_not_increment_build_number: true
+environment:
+  COVERALLS_REPO_TOKEN:
+     secure: FbkjURNtSERT35PqgkMwx3J4WwPxc926O
 build_script:
   - cmd: dotnet build -c Release
+test_script:
+- ps: >-
+
+    dotnet tool install coveralls.net --version 1.0.0 --tool-path tools
+
+    dotnet test Casbin.NET.Watcher.Redis.UnitTests/Casbin.NET.Watcher.Redis.UnitTests.csproj --configuration Release --collect "Code coverage" -s CodeCoverage.runsettings -r TestResults
+
+    $packages = ((dotnet nuget locals global-packages --list) -split "packages: ")[1]
+
+    Write-Host Nuget cache : $packages
+
+    $codecoverage = (Get-ChildItem -Path $packages\microsoft.codecoverage CodeCoverage.exe -Recurse | Select -Last 1).FullName
+
+    Write-Host codecoverage tool  :$codecoverage
+
+    $coverageFilePath = Resolve-Path -path "TestResults\*\*.coverage"
+
+    Write-Host coverage file : $coverageFilePath
+
+    & $codecoverage analyze /output:TestResults/output.xml $coverageFilePath
+
+    Test-Path TestResults/output.xml
+
+    Write-Host coveralls.net config : $env:APPVEYOR_REPO_BRANCH, $env:APPVEYOR_REPO_COMMIT, $env:APPVEYOR_JOB_ID
+
+    $coveralls = ".\tools\csmacnz.coveralls.exe"
+
+    & $coveralls --dynamiccodecoverage -i ./TestResults/output.xml --repoToken $env:COVERALLS_REPO_TOKEN --useRelativePaths --commitId $env:APPVEYOR_REPO_COMMIT --commitBranch $env:APPVEYOR_REPO_BRANCH --commitAuthor $env:APPVEYOR_REPO_COMMIT_AUTHOR --commitEmail $env:APPVEYOR_REPO_COMMIT_AUTHOR_EMAIL --commitMessage $env:APPVEYOR_REPO_COMMIT_MESSAGE --jobId $env:APPVEYOR_JOB_ID

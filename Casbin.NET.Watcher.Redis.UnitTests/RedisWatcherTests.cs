@@ -27,6 +27,20 @@ namespace Casbin.NET.Watcher.Redis.UnitTests
             Assert.ThrowsException<StackExchange.Redis.RedisConnectionException>(() => new RedisWatcher(connectionString));
         }
 
+#if !TRUEREDIS
+        [TestMethod]
+        public void CloseConnectionTest()
+        {
+            var connection = GetConnection(SubscriptionType.Publisher);
+
+            var watcher = new RedisWatcher(connection);
+
+            watcher.Close();
+
+            Mock.Get(connection).Verify(con => con.Close(It.IsAny<bool>()), Times.Once);
+        }
+#endif
+
         [TestMethod]
         public void NominalTest()
         {
