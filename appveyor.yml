@@ -18,12 +18,22 @@ test_script:
 
     $packages = ((dotnet nuget locals global-packages --list) -split "packages: ")[1]
 
+    Write-Host Nuget cache : $packages
+
     $codecoverage = (Get-ChildItem -Path $packages\microsoft.codecoverage CodeCoverage.exe -Recurse | Select -Last 1).FullName
+
+    Write-Host codecoverage tool  :$codecoverage
 
     $coverageFilePath = Resolve-Path -path "TestResults\*\*.coverage"
 
-    Start-Process -FilePath $codecoverage -ArgumentList "analyze /output:TestResults/output.xml $coverageFilePath"
+    Write-Host coverage file : $coverageFilePath
+
+    & $codecoverage analyze /output:TestResults/output.xml $coverageFilePath
+
+    Test-Path TestResults/output.xml
+
+    Write-Host coveralls.net config : $env:APPVEYOR_REPO_BRANCH, $env:APPVEYOR_REPO_COMMIT, $env:APPVEYOR_JOB_ID
 
     $coveralls = ".\tools\csmacnz.coveralls.exe"
 
-    & $coveralls --dynamiccodecoverage -i TestResults/output.xml --repoToken $env:COVERALLS_REPO_TOKEN --commitId $env:APPVEYOR_REPO_COMMIT --commitBranch $env:APPVEYOR_REPO_BRANCH --commitAuthor $env:APPVEYOR_REPO_COMMIT_AUTHOR --commitEmail $env:APPVEYOR_REPO_COMMIT_AUTHOR_EMAIL --commitMessage $env:APPVEYOR_REPO_COMMIT_MESSAGE --jobId $env:APPVEYOR_JOB_ID
+    & $coveralls --dynamiccodecoverage -i ./TestResults/output.xml --repoToken $env:COVERALLS_REPO_TOKEN --useRelativePaths --commitId $env:APPVEYOR_REPO_COMMIT --commitBranch $env:APPVEYOR_REPO_BRANCH --commitAuthor $env:APPVEYOR_REPO_COMMIT_AUTHOR --commitEmail $env:APPVEYOR_REPO_COMMIT_AUTHOR_EMAIL --commitMessage $env:APPVEYOR_REPO_COMMIT_MESSAGE --jobId $env:APPVEYOR_JOB_ID
