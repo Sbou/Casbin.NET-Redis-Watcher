@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using NetCasbin.Persist;
 using StackExchange.Redis;
 
@@ -67,11 +68,28 @@ namespace Redis.Casbin.NET
         }
 
         /// <summary>
+        /// Set the callback to trigger when a message is received
+        /// </summary>
+        /// <param name="callback"></param>
+        public void SetUpdateCallback(Func<Task> callback)
+        {
+            this.callback = () => { Task.Run(this.callback); };
+        }
+
+        /// <summary>
         /// Publish a message to prevent other instances
         /// </summary>
         public void Update()
         {
             publisher.PublishAsync(channelName, localID);
+        }
+
+        /// <summary>
+        /// Publish a message to prevent other instances
+        /// </summary>
+        public Task UpdateAsync()
+        {
+            return publisher.PublishAsync(channelName, localID);
         }
 
         /// <summary>
