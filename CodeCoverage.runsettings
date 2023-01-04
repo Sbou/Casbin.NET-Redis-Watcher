@@ -29,7 +29,7 @@ Included items must then not match any entries in the exclude list to remain inc
             <!-- Match assembly file paths: -->  
             <ModulePaths>
               <Include>
-                <ModulePath>.*Casbin.*\.dll</ModulePath>
+                <ModulePath>.*Casbin.NET.Watcher.Redis.dll</ModulePath>
               </Include>
               <Exclude>
                 <ModulePath>.*tests*.dll</ModulePath>

@@ -14,7 +14,7 @@ test_script:
 
     dotnet tool install coveralls.net --version 4.0.1 --tool-path tools
 
-    dotnet test Casbin.NET.Watcher.Redis.UnitTests/Casbin.NET.Watcher.Redis.UnitTests.csproj --configuration Release --collect "Code coverage" -s CodeCoverage.runsettings --results-directory TestResults
+    dotnet test Casbin.NET.Watcher.Redis.UnitTests/Casbin.NET.Watcher.Redis.UnitTests.csproj --configuration Release --collect "Code coverage" --settings CodeCoverage.runsettings --results-directory TestResults
 
     $packages = ((dotnet nuget locals global-packages --list) -split "packages: ")[1]
 
