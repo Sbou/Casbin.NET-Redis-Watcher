@@ -67,5 +67,34 @@ namespace Casbin.NET.Watcher.Redis.UnitTests
 
             Assert.IsFalse(callback.Task.Wait(500), "The watcher shouldn't receive its self messages");
         }
+
+        [TestMethod]
+        public void CallbackNull()
+        {
+            var watcher = new RedisWatcher(GetConnection(SubscriptionType.Subscriber));
+
+            var watcher2 = new RedisWatcher(GetConnection(SubscriptionType.Publisher));
+            watcher2.Update();
+        }
+
+        [TestMethod]
+        public async Task NominalTestAsync()
+        {
+            var validation = new TaskCompletionSource<int>();
+
+            Task callback()
+            {
+                validation.SetResult(1);
+                return Task.CompletedTask;
+            }
+            
+            var watcher = new RedisWatcher(GetConnection(SubscriptionType.Subscriber));
+            watcher.SetUpdateCallback(callback);
+
+            var watcher2 = new RedisWatcher(GetConnection(SubscriptionType.Publisher));
+            await watcher2.UpdateAsync();
+
+            Assert.IsTrue(validation.Task.Wait(300), "The first watcher didn't receive the notification");
+        }
     }
 }

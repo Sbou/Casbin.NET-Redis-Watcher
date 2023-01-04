@@ -73,7 +73,7 @@ namespace Redis.Casbin.NET
         /// <param name="callback"></param>
         public void SetUpdateCallback(Func<Task> callback)
         {
-            this.callback = () => { Task.Run(this.callback); };
+            this.callback = () => { Task.Run(callback); };
         }
 
         /// <summary>
