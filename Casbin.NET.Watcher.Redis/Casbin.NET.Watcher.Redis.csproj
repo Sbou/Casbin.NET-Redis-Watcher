@@ -6,17 +6,18 @@
     <Authors>Casbin, Sebastien Boury</Authors>
     <RepositoryUrl>https://github.com/Sbou/Casbin.NET-Redis-Watcher</RepositoryUrl>
     <PackageProjectUrl>https://github.com/Sbou/Casbin.NET-Redis-Watcher</PackageProjectUrl>
-    <PackageLicenseUrl>https://github.com/Sbou/Casbin.NET-Redis-Watcher/blob/master/LICENSE</PackageLicenseUrl>
+    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <RepositoryType>GIT</RepositoryType>
     <Copyright>Apache License 2.0</Copyright>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Configurations>Debug;Release;TrueRedis</Configurations>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <Version>1.1.0</Version>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Casbin.NET" Version="1.13.0" />
-    <PackageReference Include="StackExchange.Redis" Version="2.0.601" />
+    <PackageReference Include="StackExchange.Redis" Version="2.1.55" />
   </ItemGroup>
 
 </Project>

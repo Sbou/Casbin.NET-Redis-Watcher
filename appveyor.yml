@@ -1,5 +1,5 @@
 version: '{build}'
-image: Visual Studio 2019
+image: Visual Studio 2022
 configuration: Release
 skip_non_tags: true
 pull_requests:
@@ -7,14 +7,16 @@ pull_requests:
 environment:
   COVERALLS_REPO_TOKEN:
      secure: /xeQOWRDMuzkPwbXWh+I61k/c+0umMsf5c1Jwfol/AlmChLMgwZXLHm2yE7gyJ5Q
+nuget:
+  disable_publish_on_pr: true 
 build_script:
   - cmd: dotnet build -c Release
 test_script:
 - ps: >-
 
-    dotnet tool install coveralls.net --version 1.0.0 --tool-path tools
+    dotnet tool install coveralls.net --version 4.0.1 --tool-path tools
 
-    dotnet test Casbin.NET.Watcher.Redis.UnitTests/Casbin.NET.Watcher.Redis.UnitTests.csproj --configuration Release --collect "Code coverage" -s CodeCoverage.runsettings -r TestResults
+    dotnet test Casbin.NET.Watcher.Redis.UnitTests/Casbin.NET.Watcher.Redis.UnitTests.csproj --configuration Release --collect "Code coverage" --settings CodeCoverage.runsettings --results-directory TestResults
 
     $packages = ((dotnet nuget locals global-packages --list) -split "packages: ")[1]
 
@@ -37,3 +39,10 @@ test_script:
     $coveralls = ".\tools\csmacnz.coveralls.exe"
 
     & $coveralls --dynamiccodecoverage -i ./TestResults/output.xml --repoToken $env:COVERALLS_REPO_TOKEN --useRelativePaths --commitId $env:APPVEYOR_REPO_COMMIT --commitBranch $env:APPVEYOR_REPO_BRANCH --commitAuthor $env:APPVEYOR_REPO_COMMIT_AUTHOR --commitEmail $env:APPVEYOR_REPO_COMMIT_AUTHOR_EMAIL --commitMessage $env:APPVEYOR_REPO_COMMIT_MESSAGE --jobId $env:APPVEYOR_JOB_ID
+
+  deploy:
+    provider: NuGet
+    api_key:
+      secure: 9COz0H55FQYBR7Hi7mAfWQe2JprfnmYimCxR4YvkVkPGZB9LK6UAy92vumXMqqJ+
+    skip_symbols: false
+    artifact: /.*Casbin\.NET\.Watcher\.Redis.*\.nupkg/
