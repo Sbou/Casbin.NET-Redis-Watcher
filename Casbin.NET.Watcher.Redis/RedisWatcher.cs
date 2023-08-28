@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
-using NetCasbin.Persist;
+using Casbin.Persist;
 using StackExchange.Redis;
 
 namespace Redis.Casbin.NET
@@ -49,7 +49,7 @@ namespace Redis.Casbin.NET
         {
             publisher = connection.GetSubscriber();
 
-            publisher.Subscribe(channelName, (channel, value) =>
+            publisher.Subscribe(RedisChannel.Literal(channelName), (channel, value) =>
             {
                 if (value != localID)
                 {
@@ -81,7 +81,7 @@ namespace Redis.Casbin.NET
         /// </summary>
         public void Update()
         {
-            publisher.PublishAsync(channelName, localID);
+            publisher.PublishAsync(RedisChannel.Literal(channelName), localID);
         }
 
         /// <summary>
@@ -89,7 +89,7 @@ namespace Redis.Casbin.NET
         /// </summary>
         public Task UpdateAsync()
         {
-            return publisher.PublishAsync(channelName, localID);
+            return publisher.PublishAsync(RedisChannel.Literal(channelName), localID);
         }
 
         /// <summary>
@@ -100,5 +100,42 @@ namespace Redis.Casbin.NET
             publisher?.UnsubscribeAll();
             connection?.Close();
         }
+
+        /// <summary>
+        /// Close all the subscription and the connection
+        /// </summary>
+        public async Task CloseAsync()
+        {
+            await publisher?.UnsubscribeAllAsync();
+            await connection?.CloseAsync();
+        }
+
+        /// <summary>
+        /// This callback is not implemented because we only use the Redis to notify the other instances and not to store the modifications
+        /// </summary>
+        /// <param name="callback"></param>
+        /// <exception cref="NotImplementedException"></exception>
+        public void SetUpdateCallback(Action<IPolicyChangeMessage> callback) => throw new NotImplementedException();
+
+        /// <summary>
+        /// This callback is not implemented because we only use the Redis to notify the other instances and not to store the modifications
+        /// </summary>
+        /// <param name="callback"></param>
+        /// <exception cref="NotImplementedException"></exception>
+        public void SetUpdateCallback(Func<IPolicyChangeMessage, Task> callback) => throw new NotImplementedException();
+
+        /// <summary>
+        /// Publish a message to prevent other instances
+        /// </summary>
+        /// <param name="message"></param>
+        /// <remarks>The given message is not send in the notification</remarks>
+        public void Update(IPolicyChangeMessage message) => Update();
+
+        /// <summary>
+        /// Publish a message to prevent other instances
+        /// </summary>
+        /// <param name="message"></param>
+        /// <remarks>The given message is not send in the notification</remarks>
+        public Task UpdateAsync(IPolicyChangeMessage message) => UpdateAsync();
     }
 }

@@ -1,8 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFrameworks>net6.0;netstandard2.0</TargetFrameworks>
     <Description>Redis watcher for Casbin.NET</Description>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
     <Authors>Casbin, Sebastien Boury</Authors>
     <RepositoryUrl>https://github.com/Sbou/Casbin.NET-Redis-Watcher</RepositoryUrl>
     <PackageProjectUrl>https://github.com/Sbou/Casbin.NET-Redis-Watcher</PackageProjectUrl>
@@ -12,12 +13,16 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Configurations>Debug;Release;TrueRedis</Configurations>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <Version>1.1.0</Version>
+    <Version>2.0.0</Version>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Casbin.NET" Version="1.13.0" />
-    <PackageReference Include="StackExchange.Redis" Version="2.1.55" />
+    <PackageReference Include="Casbin.NET" Version="2.0.3" />
+    <PackageReference Include="StackExchange.Redis" Version="2.6.122" />
   </ItemGroup>
 
+
+  <ItemGroup>
+    <None Include="../README.md" Pack="true" PackagePath="" />
+  </ItemGroup>
 </Project>
