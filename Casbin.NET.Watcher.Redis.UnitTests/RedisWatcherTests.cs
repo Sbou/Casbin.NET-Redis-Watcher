@@ -39,13 +39,25 @@ namespace Casbin.NET.Watcher.Redis.UnitTests
 
             Mock.Get(connection).Verify(con => con.Close(It.IsAny<bool>()), Times.Once);
         }
+
+        [TestMethod]
+        public async Task CloseConnectionTestAsync()
+        {
+            var connection = GetConnection(SubscriptionType.Publisher);
+
+            var watcher = new RedisWatcher(connection);
+
+            await watcher.CloseAsync();
+
+            Mock.Get(connection).Verify(con => con.CloseAsync(It.IsAny<bool>()), Times.Once);
+        }
 #endif
 
         [TestMethod]
         public void NominalTest()
         {
             var callback = new TaskCompletionSource<int>();
-            
+
             var watcher = new RedisWatcher(GetConnection(SubscriptionType.Subscriber));
             watcher.SetUpdateCallback(() => callback.TrySetResult(1));
 
@@ -87,7 +99,7 @@ namespace Casbin.NET.Watcher.Redis.UnitTests
                 validation.SetResult(1);
                 return Task.CompletedTask;
             }
-            
+
             var watcher = new RedisWatcher(GetConnection(SubscriptionType.Subscriber));
             watcher.SetUpdateCallback(callback);
 

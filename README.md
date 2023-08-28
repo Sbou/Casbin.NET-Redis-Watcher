@@ -16,7 +16,7 @@ Redis Watcher is a [Redis](http://redis.io) watcher for [Casbin.NET](https://git
 
 ```csharp
 
-using NetCasbin;
+using Casbin;
 using Redis.Casbin.NET;
 
 public class Program
@@ -25,7 +25,7 @@ public class Program
     {
         // Initialize the watcher.
         // Use the Redis host as parameter.
-        var watcher = new RedisWatcher("127.0.0.1:6379";
+        var watcher = new RedisWatcher("127.0.0.1:6379");
 
         // Initialize the enforcer.
         var _enforcer = new Enforcer("examples/rbac_model.conf", "examples/rbac_policy.csv");
